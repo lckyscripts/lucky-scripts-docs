@@ -9,4 +9,5 @@ module.exports = withNextra({
   images: {
     unoptimized: true,
   },
+  transpilePackages: ['nextra', 'nextra-theme-docs'],
 })
