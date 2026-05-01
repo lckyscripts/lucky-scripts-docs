@@ -10,4 +10,5 @@ module.exports = withNextra({
     unoptimized: true,
   },
   transpilePackages: ['nextra', 'nextra-theme-docs'],
+  basePath: '/lucky-scripts-docs',
 })
