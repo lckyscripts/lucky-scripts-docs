@@ -68,4 +68,4 @@ This documentation is built with MDX. To contribute:
 
 ## 📄 License
 
-Copyright © 2024 LuckyScripts. All rights reserved.
+Copyright © 2024 LuckyScripts. All rights reserved.# lucky-scripts-docs
