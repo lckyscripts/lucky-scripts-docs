@@ -1,21 +1,5 @@
-import type { NavItem, DocsThemeConfig } from 'nextra-theme-docs'
-
-const navItems: NavItem[] = [
-  {
-    title: 'Store',
-    href: 'https://lucky-scripts.tebex.io/',
-  },
-  {
-    title: 'GitHub',
-    href: 'https://github.com/lckyscripts',
-  },
-  {
-    title: 'Discord',
-    href: 'https://discord.gg/Hq34KyH3pc',
-  },
-]
-
-const config: DocsThemeConfig = {
+/** @type {import('nextra-theme-docs').DocsThemeConfig} */
+const config = {
   logo: (
     <div style={{ fontWeight: 'bold', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
       <span>🎲</span>
@@ -41,7 +25,20 @@ const config: DocsThemeConfig = {
   primaryHue: 200,
   primaryColor: '#22c55e',
   navbar: {
-    items: navItems,
+    items: [
+      {
+        title: 'Store',
+        href: 'https://lucky-scripts.tebex.io/',
+      },
+      {
+        title: 'GitHub',
+        href: 'https://github.com/lckyscripts',
+      },
+      {
+        title: 'Discord',
+        href: 'https://discord.gg/Hq34KyH3pc',
+      },
+    ],
   },
 }
 
