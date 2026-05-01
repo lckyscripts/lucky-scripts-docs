@@ -5,10 +5,5 @@ const withNextra = require('nextra')({
 })
 
 module.exports = withNextra({
-  output: 'export',
-  images: {
-    unoptimized: true,
-  },
   transpilePackages: ['nextra', 'nextra-theme-docs'],
-  basePath: '/lucky-scripts-docs',
 })
