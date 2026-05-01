@@ -1,64 +1,106 @@
 ---
 title: Status
-description: Player Status System
+description: Lightweight Player Status System
 ---
 
 # Status
 
-> Free FiveM script for player status management
+> Lightweight, High-Performance Player Status System | Framework Agnostic
 
-## 📋 Overview
+**lcky-status** is a modern player status system with advanced Bridge system for full framework compatibility.
 
-Status is a simple yet effective player status system featuring:
+---
 
-- **Health system** - Manage HP, armor, hunger, thirst
-- **Visual indicators** - On-screen status bars
-- **Auto-regeneration** - Natural health recovery
-- **Custom statuses** - Add your own status types
+## ✨ Features
 
-## ⚙️ Configuration
+| Feature | Description |
+|---------|-------------|
+| 🌉 **Bridge System** | Auto-detects qbx_core, qb-core, or ESX |
+| 💾 **Metadata Storage** | Uses native framework metadata (no SQL tables) |
+| 🎨 **Modern UI** | ox_lib context menus and input dialogs |
+| 👁️ **Multi-Targeting** | Works with ox_target and qb-target |
+| 🔊 **Proximity Alerts** | Notifies players within 10m when status changes |
+| ⚡ **Optimized** | 0.00ms idle performance |
+| 🛠️ **Developer API** | Comprehensive exports for integration |
+
+---
+
+## 📦 Compatibility
+
+### Supported Frameworks
+- ✅ Qbox (`qbx_core`)
+- ✅ QBCore (`qb-core`)
+- ✅ ESX (`es_extended`)
+
+### Supported Target Systems
+- ✅ ox_target
+- ✅ qb-target
+
+### Dependencies
+- [ox_lib](https://github.com/overextended/ox_lib) (Required)
+
+---
+
+## � Installation
+
+```bash
+# 1. Place in resources folder
+# resources/lcky-status/
+
+# 2. Add to server.cfg
+ensure lcky-status
+
+# 3. Restart server
+```
+
+---
+
+## 🎮 Usage
+
+### For Players
+
+#### Set Status
+```bash
+/status
+```
+Opens a menu where you can:
+- **Set Status** - Enter a custom message (e.g., "Working", "AFK - Brb")
+- **Clear Status** - Remove your current status
+
+#### View Others' Status
+Press your interaction key (default `Alt`) while looking at another player to see their status.
+
+---
+
+## 🔊 Proximity Notifications
+
+When you update your status, players within a **10-meter radius** receive a notification informing them of the change.
+
+---
+
+## 💻 Developer API
+
+### Server-Side Exports
 
 ```lua
--- config.lua
-Config.StatusBars = {
-  {
-    type = 'hunger',
-    color = '#e67e22',
-    icon = '🍔',
-    maxValue = 100,
-  },
-  {
-    type = 'thirst', 
-    color = '#3498db',
-    icon = '💧',
-    maxValue = 100,
-  },
-}
+-- Get a player's status
+local status = exports['lcky-status']:GetPlayerStatus(source)
+-- Returns: "Working at the Forge" or nil
+
+-- Set a player's status
+exports['lcky-status']:SetPlayerStatus(source, "Custom Status")
 ```
 
-## 📥 Installation
+### Client-Side Exports
 
-1. Extract to `resources/lucky-status`
-2. Add `ensure lucky-status` to server.cfg
-
-## 🎮 Features
-
-### Status Types
-
-| Status | Effect |
-|--------|--------|
-| Hunger | Reduces stamina over time |
-| Thirst | Reduces health regeneration |
-| Stamina | Affects sprint duration |
-
-### UI Toggle
-
-```
-/status - Toggle status display
-/status debug - Show debug info
+```lua
+-- Get your current status from server
+local status = exports['lcky-status']:GetPlayerStatusFromServer()
 ```
 
-## 🔧 Compatibility
+---
 
-- Compatible with most HUD systems
-- Can be disabled via config
+## 📄 License
+
+Developed by **LuckyScripts**
+Special thanks to **Qbox Project** and **Overextended** team

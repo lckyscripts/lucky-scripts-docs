@@ -1,48 +1,137 @@
 ---
 title: Auction Experience
-description: FiveM Auction System
+description: Standalone FiveM Auction System
 ---
 
 # Auction Experience
 
-> Free FiveM script for auction system
+> Standalone FiveM Auction System | Framework Independent
 
-## 📋 Overview
+**lcky-auction** is an immersive, optimized, and simple in-game auction experience for FiveM servers.
 
-Auction Experience is a comprehensive auction system for your roleplay servers. Features include:
+---
 
-- **Real-time bidding** - Live auction updates
-- **Multiple categories** - Support for various item types
-- **Time-limited auctions** - Auto-close functionality
-- **Bid history** - Track all auction activity
+## ✨ Features
 
-## ⚙️ Configuration
+| Feature | Description |
+|---------|-------------|
+| ✅ Framework Independent | No ESX/QB-Core required |
+| ✅ ox_lib Required | Modern UI powered by ox_lib |
+| ✅ RAM-Based | No database needed |
+| ✅ Event-Driven | No global loops |
+| ✅ Zone-Based | Uses lib.points for proximity |
+| ✅ 3-Stage Host Control | Going Once → Twice → SOLD |
 
-```lua
--- fxmanifest.lua
-fx_version 'cerulean'
-game 'gta5'
+---
 
-description 'Auction Experience'
-version '1.0.0'
+## 📦 Installation
+
+### Prerequisites
+- FiveM Server (Build 5181+)
+- [ox_lib](https://github.com/overextended/ox_lib)
+
+### Steps
+
+```bash
+# 1. Place in your resources folder
+# resources/lcky-auction/
+
+# 2. Ensure ox_lib is installed
+
+# 3. Add to server.cfg
+ensure lcky-auction
+
+# 4. Start your server
 ```
 
-## 📥 Installation
+---
 
-1. Download from GitHub
-2. Place in `resources/[lcky]/auction-experience`
-3. Add `ensure auction-experience` to server.cfg
+## 📁 File Structure
+
+```
+lcky-auction/
+├── fxmanifest.lua
+├── shared/
+│   ├── config.lua      # Configuration
+│   └── utils.lua       # Utility functions
+├── client/
+│   ├── main.lua        # Client entry
+│   ├── zone.lua        # Zone management
+│   ├── ui.lua          # UI handling
+│   ├── animation.lua   # Animations
+│   └── keybinds.lua    # Keybind setup
+└── server/
+    ├── main.lua        # Server entry
+    └── auction.lua     # Auction logic
+```
+
+---
 
 ## 🎮 Usage
 
-Players can access auctions via a menu or command:
+### Create Auction
+Use the command `/auction` to open the input dialog and create a new auction.
 
+### Join Auction
+1. Enter the auction zone
+2. Press **X** to join
+
+### Place Bid
+1. After joining, press **X**
+2. Enter your bid amount
+
+### Host Controls
+
+| Key | Action |
+|-----|--------|
+| `F5` | Going Once |
+| `F6` | Going Twice |
+| `F7` | SOLD |
+
+---
+
+## ⚙️ Configuration
+
+Edit `shared/config.lua`:
+
+```lua
+Config = {
+    Zone = {
+        radius = 50.0,  -- Auction zone radius
+    },
+    Keybinds = {
+        joinBid = {
+            defaultKey = 'X',  -- Key to join/place bid
+        },
+    },
+    Defaults = {
+        defaultDuration = 120,  -- Default auction duration (seconds)
+    },
+}
 ```
-/auction - Open auction menu
-/auction create [item] [price] - Create new auction
-```
 
-## 🔧 Dependencies
+---
 
-- ESX or QB-Core framework
-- ox_lib (optional for UI)
+## ⚡ Optimization
+
+The script is highly optimized for performance:
+
+- ❌ No `while true` loops
+- ✅ lib.points internal tick system
+- ✅ TextUI updates only on time change
+- ✅ Zone-only broadcast (saves bandwidth)
+
+---
+
+## 🔧 Requirements
+
+| Requirement | Version |
+|-------------|---------|
+| FiveM Server | 5181+ |
+| ox_lib | Latest |
+
+---
+
+## 📝 License
+
+Developed by **LuckyScripts**

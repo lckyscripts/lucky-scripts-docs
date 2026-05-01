@@ -1,54 +1,201 @@
 ---
-title: Restaurant/Business Management
-description: Complete restaurant management system
+title: Restaurant Management
+description: Full-Featured Restaurant/Business Management System
 ---
 
-# Restaurant/Business Management
+# Restaurant Management
 
-> 💰 Paid FiveM script for restaurant and business management
+> 💰 Full-Featured, Optimized & Dynamic Restaurant/Business Management System
 
-## 📋 Overview
+**lcky-restaurant_management** is a production-ready restaurant and business management framework built for FiveM. Features lazy-loading architecture, RAM-first caching, and framework-agnostic bridge system.
 
-A complete business management system for restaurants and shops:
+---
 
-- **Business creation** - Setup multiple businesses
-- **Employee management** - Hire and manage staff
-- **Order system** - Process customer orders
-- **Financial tracking** - Monitor profits and losses
+## ✨ Features
 
-## ⚙️ Requirements
+### Core Systems
+- 🏪 **Multi-Restaurant Support** - Unlimited restaurants with independent menus, recipes, orders
+- 📦 **Lazy Loading** - Restaurants load from SQL on first access (minimal memory)
+- ⚡ **RAM-First Caching** - All runtime data cached in memory with instant SQL sync
+- 🔒 **Job Grade Permissions** - Granular access based on framework job grades
 
-- ESX Legacy or QB-Core
-- ox_lib for menus
-- ox_inventory (recommended)
+### Business Operations
+- 📋 **Dynamic Menu Management** - Add, edit, remove menu items in real-time
+- 🧑‍🍳 **Kitchen Station System** - Cooking (Grill, Fryer, Oven, Coffee) and Assembly stations
+- 🍳 **Dynamic Recipe System** - Restaurant-specific recipes with custom ingredients
+- 🛒 **Cart & Order System** - Full ordering flow with FIFO queue and real-time kitchen updates
+- 💰 **Payment System** - Cash and bank card payments with confirmation
+- 🧾 **Receipt System** - Physical receipt items (ox_inventory) with single/bulk redemption
+- 💲 **Tip System** - Configurable tip percentages (0-20%)
+- 🏷️ **Discount System** - Time-limited hourly discounts
+- 📊 **Z Report System** - Revenue analytics and statistics
+- 🏪 **Wholesale Market** - Bulk ingredient purchasing via ox_inventory
 
-## 📥 Installation
+---
 
-1. Purchase from [Tebex Store](https://lucky-scripts.tebex.io/)
-2. Download the resource
-3. Configure `config.lua`
-4. Add to server.cfg
+## 📦 Dependencies
 
-## ⚡ Features
+| Dependency | Required |
+|------------|----------|
+| ox_lib | ✅ |
+| ox_inventory | ✅ |
+| oxmysql | ✅ |
+| ox_target or qb-target | ✅ |
+| qbx_core, qb-core, or ESX | ✅ |
 
-### Business Types
+---
 
-| Type | Description |
-|------|-------------|
-| Restaurant | Food preparation and service |
-| Bar | Drinks and entertainment |
-| Shop | Retail merchandise |
-| Service | Professional services |
+## 🚀 Installation
 
-### Management Commands
+### Step 1 - Place the Resource
+```
+resources/
+└── [spc-scripts]/
+    └── lcky-restaurant_management/
+```
+
+### Step 2 - Import Database
+Execute `sql/schema.sql` - creates:
+- `lcky_restaurants` - Restaurant definitions
+- `lcky_menu_items` - Menu items
+- `lcky_recipes` - Dynamic recipes
+- `lcky_recipe_ingredients` - Recipe ingredients
+- `lcky_interaction_points` - Interaction points
+- `lcky_orders_log` - Order history
+- `lcky_discounts` - Discount records
+
+### Step 3 - Register Inventory Items
+Add items from `inventoryitems.lua` to your ox_inventory items config.
+
+### Step 4 - Add to server.cfg
+```cfg
+ensure ox_lib
+ensure oxmysql
+ensure ox_inventory
+ensure ox_target
+ensure lcky-restaurant_management
+```
+
+### Step 5 - Admin Permission
+```cfg
+add_ace group.admin command.restaurantadmin allow
+```
+
+### Step 6 - Create Restaurants
+Use `/restaurantadmin` in-game to register restaurants.
+
+---
+
+## 📁 Architecture
 
 ```
-/business menu - Open management panel
-/biz hire [player] - Hire employee
-/biz fire [player] - Fire employee
-/biz info - View business stats
+├── client/      # Point manager, interaction editor, menus, kitchen
+├── server/      # Instance, menu, order, recipe, kitchen managers
+│   └── repositories/  # SQL abstraction layer
+└── shared/
+    ├── config.lua     # Main configuration
+    ├── config_stations.lua  # Station definitions
+    └── bridge/        # Framework auto-detect
+        ├── core/      # qb.lua, esx.lua
+        ├── inventory/ # ox.lua, qb.lua
+        └── target/    # ox.lua, qb.lua
 ```
 
-## 💵 Pricing
+### Data Flow
+1. **Lazy Loading** - Restaurant data loads from MySQL on first access
+2. **RAM Cache** - Data lives in `_G.SPC_RestaurantInstances`
+3. **Instant Sync** - Every mutation writes to SQL first, then updates cache
 
-Visit our [store](https://lucky-scripts.tebex.io/) for current pricing and licensing options.
+---
+
+## ⚙️ Configuration
+
+### Permission Grades
+```lua
+Config.Permissions = {
+    accessCashier = 0,      -- All employees
+    accessStorage = 1,      -- Chef+
+    accessKitchen = 1,      -- Chef+
+    editMenu = 2,           -- Manager+
+    viewZReport = 2,        -- Manager+
+    manageDiscounts = 2,    -- Manager+
+}
+```
+
+### Restaurant Definitions
+```lua
+Config.Restaurants = {
+    ["burgershot"] = { name = "Burger Shot" },
+    ["beanmachine"] = { name = "Bean Machine" },
+}
+```
+
+### Menu Categories
+```lua
+Config.MenuCategories = {
+    burger  = { label = "Burgers",  icon = "fas fa-burger" },
+    drink   = { label = "Drinks",   icon = "fas fa-glass-water" },
+}
+```
+
+---
+
+## 🔧 Cooking Stations
+
+| Station | Processes |
+|---------|-----------|
+| **Grill** | Raw Meat → Cooked Meat, Raw Bacon → Cooked Bacon |
+| **Fryer** | Potato → Fries, Onion → Onion Rings |
+| **Oven** | Dough → Baked Dough, Whole Chicken → Roasted Chicken |
+| **Coffee Machine** | Coffee Beans → Espresso Shot |
+
+### Assembly Stations
+Dynamic recipe-based stations (Prep Table, Drink Station)
+
+---
+
+## 🎮 In-Game Commands
+
+| Command | Description |
+|---------|-------------|
+| `/restaurantadmin` | Open admin panel |
+| (In-game menus) | Management, Cashier, Kitchen interfaces |
+
+---
+
+## 📤 Key Exports
+
+### Instance Manager
+```lua
+exports['lcky-restaurant_management']:GetRestaurant(jobName)
+exports['lcky-restaurant_management']:HasPlayerPermission(source, perm)
+exports['lcky-restaurant_management']:PreloadAllRestaurants()
+```
+
+### Order Manager
+```lua
+exports['lcky-restaurant_management']:CreateOrder(source, jobName, items)
+exports['lcky-restaurant_management']:UpdateOrderStatus(jobName, orderId, status)
+```
+
+### Menu Manager
+```lua
+exports['lcky-restaurant_management']:AddMenuItem(jobName, data)
+exports['lcky-restaurant_management']:GetRestaurantMenu(jobName)
+```
+
+---
+
+## 🛠️ Admin Setup
+
+1. Grant ACE permission: `add_ace group.admin command.restaurantadmin allow`
+2. Run `/restaurantadmin` in-game
+3. Add restaurants and interaction points
+4. Set up menus and recipes
+5. Open for business via Management Menu
+
+---
+
+## 📝 License
+
+Developed by **LuckyScripts** | All rights reserved

@@ -1,63 +1,149 @@
 ---
 title: Contract - Job Posting
-description: FiveM Job Posting System
+description: Advanced Job Contract System for FiveM
 ---
 
 # Contract - Job Posting
 
-> Free script for job posting system
+> Advanced, Optimized & Dynamic Job Posting / Contract System | Framework Agnostic
 
-## 📋 Overview
+**lcky-contract** is a highly optimized job posting and contract system for FiveM. Built with a robust **Bridge Architecture** that natively supports multiple frameworks out of the box.
 
-Contract is a job posting system that allows players to:
+---
 
-- **Post jobs** - Create listings for work
-- **Browse listings** - View available jobs
-- **Accept contracts** - Apply for posted jobs
-- **Complete tasks** - Earn rewards
+## ✨ Features
 
-## ⚙️ Configuration
+### Framework Support
+- 🏗️ **Framework Agnostic** - Supports `qbx_core`, `qb-core`, and `es_extended`
+- 🎯 **Target Support** - Compatible with `ox_target` and `qb-target`
+- 🌐 **Universal Access** - Any player can post jobs (no job restrictions)
+
+### Database Optimization
+- 🧠 **Smart Filtering** - Expired listings filtered dynamically
+- 🧹 **Auto Cleanup** - Background loop cleans expired rows every 1 hour
+- 💾 **No Bloat** - SQL tables stay clean
+
+### UI & Features
+- 🎨 **ox_lib UI** - Beautiful input dialogs, context menus, and alerts
+- 📝 **My Postings Hub** - Manage your active postings (update/delete)
+- ⏰ **Configurable Limits** - Set maximum posting duration (e.g., 72 hours)
+- 📍 **Dynamic NPC Spawning** - NPC spawns only when players nearby (0.00ms usage)
+
+---
+
+## 📦 Dependencies
+
+| Dependency | Required |
+|------------|----------|
+| [ox_lib](https://github.com/overextended/ox_lib) | ✅ |
+| [oxmysql](https://github.com/overextended/oxmysql) | ✅ |
+| Framework (qbx_core, qb-core, or es_extended) | ✅ |
+| Target System (ox_target or qb-target) | ✅ |
+
+---
+
+## 🚀 Installation
+
+### Step 1 - Place the Resource
+```
+resources/
+└── [lcky-scripts]/
+    └── lcky-contract/
+```
+
+### Step 2 - Database Setup
+Execute the SQL file at `install/contracts.sql` in your database (HeidiSQL, phpMyAdmin, etc.)
+
+### Step 3 - Configuration
+Edit `shared/config.lua`:
 
 ```lua
--- config.lua
-Config = {
-  -- Payment settings
-  MinPayment = 100,
-  MaxPayment = 5000,
-  
-  -- Time limits
-  JobExpiration = 3600, -- seconds
-  
-  -- Required items
-  RequiredItem = 'contract_paper',
+-- Choose your Framework: 'qbx', 'qb', or 'esx'
+Config.Framework = 'qbx'
+
+-- Choose your Target system: 'ox_target' or 'qb-target'
+Config.Target = 'ox_target'
+
+-- Maximum duration (in hours) a player can list a job
+Config.MaxDuration = 72
+```
+
+### Step 4 - Add to server.cfg
+```cfg
+ensure ox_lib
+ensure oxmysql
+ensure lcky-contract
+```
+
+---
+
+## ⚙️ NPC Configuration
+
+Add or move NPCs in `shared/config.lua`:
+
+```lua
+Config.NPCs = {
+    {
+        model = `a_m_y_business_02`,  -- Ped model
+        coords = vector4(238.48, -407.97, 47.92, 345.5),  -- X, Y, Z, Heading
+        scenario = "WORLD_HUMAN_STAND_MOBILE"  -- Animation
+    },
+    -- Add more NPCs as needed
 }
 ```
 
-## 📥 Installation
+---
 
-```bash
-# 1. Download from GitHub
-# 2. Place in resources folder
-# 3. Add to server.cfg:
-ensure lucky-contract
+## 🎮 In-Game Usage
+
+### 1. Locate the NPC
+Find the Job Center NPC at the configured coordinates.
+
+### 2. Main Menu Options
+- **Create Job Posting** - Fill out Business Name, Job Title, Salary, Contact, Description, Duration
+- **View Job Postings** - Browse all active jobs on the server
+- **My Postings** - View, Update, or Delete your own postings
+
+### 3. Contact Employer
+Click the "Contact" button to copy the employer's phone number to clipboard.
+
+---
+
+## 🌍 Localization
+
+Everything is 100% translatable. Edit `locales/en.json`:
+
+```json
+{
+    "create_posting": "Create Job Posting",
+    "view_postings": "View Job Postings",
+    "my_postings": "My Postings"
+}
 ```
 
-## 🎮 Usage
+---
 
-### Commands
+## 🏗️ Bridge System
+
+The script automatically detects your framework:
 
 ```
-/contract post [title] [payment] - Post a new job
-/contract browse - View available jobs
-/contract cancel - Cancel your job posting
+shared/bridge/
+├── init.lua     → Auto-detect framework
+├── qb.lua       → QBX/QB-Core adapter
+└── esx.lua      → ESX adapter
 ```
 
-### Keybind
+---
 
-Default keybind: `F5` - Opens contract menu
+## 📋 Commands
 
-## 🔧 Framework Support
+| Command | Description |
+|---------|-------------|
+| `/contract` | Open main contract menu |
 
-- ✅ ESX Legacy
-- ✅ QB-Core
-- ✅ Standalone (custom events)
+---
+
+## 📝 License
+
+Developed by **LuckyScripts**
