@@ -1,0 +1,48 @@
+---
+title: Auction Experience
+description: FiveM Auction System
+---
+
+# Auction Experience
+
+> Free FiveM script for auction system
+
+## 📋 Overview
+
+Auction Experience is a comprehensive auction system for your roleplay servers. Features include:
+
+- **Real-time bidding** - Live auction updates
+- **Multiple categories** - Support for various item types
+- **Time-limited auctions** - Auto-close functionality
+- **Bid history** - Track all auction activity
+
+## ⚙️ Configuration
+
+```lua
+-- fxmanifest.lua
+fx_version 'cerulean'
+game 'gta5'
+
+description 'Auction Experience'
+version '1.0.0'
+```
+
+## 📥 Installation
+
+1. Download from GitHub
+2. Place in `resources/[lcky]/auction-experience`
+3. Add `ensure auction-experience` to server.cfg
+
+## 🎮 Usage
+
+Players can access auctions via a menu or command:
+
+```
+/auction - Open auction menu
+/auction create [item] [price] - Create new auction
+```
+
+## 🔧 Dependencies
+
+- ESX or QB-Core framework
+- ox_lib (optional for UI)

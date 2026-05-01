@@ -1,0 +1,64 @@
+---
+title: Status
+description: Player Status System
+---
+
+# Status
+
+> Free FiveM script for player status management
+
+## 📋 Overview
+
+Status is a simple yet effective player status system featuring:
+
+- **Health system** - Manage HP, armor, hunger, thirst
+- **Visual indicators** - On-screen status bars
+- **Auto-regeneration** - Natural health recovery
+- **Custom statuses** - Add your own status types
+
+## ⚙️ Configuration
+
+```lua
+-- config.lua
+Config.StatusBars = {
+  {
+    type = 'hunger',
+    color = '#e67e22',
+    icon = '🍔',
+    maxValue = 100,
+  },
+  {
+    type = 'thirst', 
+    color = '#3498db',
+    icon = '💧',
+    maxValue = 100,
+  },
+}
+```
+
+## 📥 Installation
+
+1. Extract to `resources/lucky-status`
+2. Add `ensure lucky-status` to server.cfg
+
+## 🎮 Features
+
+### Status Types
+
+| Status | Effect |
+|--------|--------|
+| Hunger | Reduces stamina over time |
+| Thirst | Reduces health regeneration |
+| Stamina | Affects sprint duration |
+
+### UI Toggle
+
+```
+/status - Toggle status display
+/status debug - Show debug info
+```
+
+## 🔧 Compatibility
+
+- Compatible with most HUD systems
+- Can be disabled via config

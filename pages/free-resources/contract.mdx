@@ -1,0 +1,63 @@
+---
+title: Contract - Job Posting
+description: FiveM Job Posting System
+---
+
+# Contract - Job Posting
+
+> Free script for job posting system
+
+## 📋 Overview
+
+Contract is a job posting system that allows players to:
+
+- **Post jobs** - Create listings for work
+- **Browse listings** - View available jobs
+- **Accept contracts** - Apply for posted jobs
+- **Complete tasks** - Earn rewards
+
+## ⚙️ Configuration
+
+```lua
+-- config.lua
+Config = {
+  -- Payment settings
+  MinPayment = 100,
+  MaxPayment = 5000,
+  
+  -- Time limits
+  JobExpiration = 3600, -- seconds
+  
+  -- Required items
+  RequiredItem = 'contract_paper',
+}
+```
+
+## 📥 Installation
+
+```bash
+# 1. Download from GitHub
+# 2. Place in resources folder
+# 3. Add to server.cfg:
+ensure lucky-contract
+```
+
+## 🎮 Usage
+
+### Commands
+
+```
+/contract post [title] [payment] - Post a new job
+/contract browse - View available jobs
+/contract cancel - Cancel your job posting
+```
+
+### Keybind
+
+Default keybind: `F5` - Opens contract menu
+
+## 🔧 Framework Support
+
+- ✅ ESX Legacy
+- ✅ QB-Core
+- ✅ Standalone (custom events)

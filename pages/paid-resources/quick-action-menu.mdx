@@ -1,0 +1,71 @@
+---
+title: Quick Action (Radial) Menu
+description: Radial menu system for quick actions
+---
+
+# Quick Action (Radial) Menu
+
+> 💰 Paid FiveM radial menu script
+
+## 📋 Overview
+
+A sleek and customizable radial menu for quick actions:
+
+- **Animated wheel** - Smooth radial animation
+- **Customizable items** - Add your own actions
+- **Category support** - Organize actions in categories
+- **Keybind system** - Easy access to menu
+
+## ⚙️ Features
+
+### Preset Categories
+
+| Category | Actions |
+|----------|---------|
+| Interactions | Greet, Wave, Hands Up |
+| Vehicle | Lock, Engine, Trunk |
+| Inventory | Items, Weapons, Quick Use |
+| Social | Voice, Radio, Eject Player |
+
+### Configuration
+
+```lua
+-- config.lua
+Config.Keybind = 'F3' -- Menu keybind
+Config.MaxRadius = 8 -- Number of items
+Config.AnimationSpeed = 150 -- ms
+```
+
+## 📥 Installation
+
+1. Purchase from [Store](https://lucky-scripts.tebex.io/)
+2. Follow included README
+3. Configure to your needs
+4. Add to server.cfg
+
+## 🎮 Usage
+
+```
+Hold [F3] - Open radial menu
+Move mouse - Select action
+Release [F3] - Execute action
+```
+
+## 🔧 Custom Actions
+
+Add your own actions in config:
+
+```lua
+Config.Actions = {
+  {
+    id = 'my_action',
+    label = 'My Custom Action',
+    icon = '🔧',
+    event = 'my:event',
+  }
+}
+```
+
+## 💵 Purchase
+
+Available at [LuckyScripts Store](https://lucky-scripts.tebex.io/)
