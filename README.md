@@ -4,7 +4,7 @@ Welcome to LuckyScripts official documentation. We provide high-quality FiveM re
 
 ## 🌐 Live Documentation
 
-**URL:** https://lckyscripts.github.io/lucky-scripts-docs/
+**URL:** https://lucky-scripts-docs.vercel.app
 
 ## 📚 Documentation Structure
 
