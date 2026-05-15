@@ -1,71 +1,193 @@
+# Lcky Radial Menu
+
+A modern, glassmorphism-style radial menu system for FiveM.
+
+## Features
+
+- 🎨 **Glassmorphism Design** - Premium look and feel
+- 🎬 **Smooth Animations** - Framer Motion powered
+- 🌍 **Theme Color Support** - Customizable via config
+- 🔧 **Easy Configuration** - Simple Lua config setup
+- 📱 **Responsive** - Works on mobile and desktop
+
 ---
-title: Quick Action (Radial) Menu
-description: Radial menu system for quick actions
+
+## Installation
+
+1. Copy the resource to your `resources` folder
+2. Check the `ui` path in `fxmanifest.lua`
+3. Edit `config.lua` according to your needs
+4. Start the server
+
 ---
 
-# Quick Action (Radial) Menu
+## Configuration (config.lua)
 
-> 💰 Paid FiveM radial menu script
-
-## 📋 Overview
-
-A sleek and customizable radial menu for quick actions:
-
-- **Animated wheel** - Smooth radial animation
-- **Customizable items** - Add your own actions
-- **Category support** - Organize actions in categories
-- **Keybind system** - Easy access to menu
-
-## ⚙️ Features
-
-### Preset Categories
-
-| Category | Actions |
-|----------|---------|
-| Interactions | Greet, Wave, Hands Up |
-| Vehicle | Lock, Engine, Trunk |
-| Inventory | Items, Weapons, Quick Use |
-| Social | Voice, Radio, Eject Player |
-
-### Configuration
+### Basic Settings
 
 ```lua
--- config.lua
-Config.Keybind = 'F3' -- Menu keybind
-Config.MaxRadius = 8 -- Number of items
-Config.AnimationSpeed = 150 -- ms
+Config.OpenKey = "F3"           -- Menu toggle key
+Config.KeyDescription = "Open Radial Menu"  -- Keybind description
+Config.ThemeColor = "22c55e"    -- HEX color code (Theme color)
 ```
 
-## 📥 Installation
-
-1. Purchase from [Store](https://lucky-scripts.tebex.io/)
-2. Follow included README
-3. Configure to your needs
-4. Add to server.cfg
-
-## 🎮 Usage
-
-```
-Hold [F3] - Open radial menu
-Move mouse - Select action
-Release [F3] - Execute action
-```
-
-## 🔧 Custom Actions
-
-Add your own actions in config:
+### Menu Item Structure
 
 ```lua
-Config.Actions = {
-  {
-    id = 'my_action',
-    label = 'My Custom Action',
-    icon = '🔧',
-    event = 'my:event',
-  }
+Config.RadialItems = {
+    {
+        id = "unique_id",           -- Unique ID
+        icon = "fa-solid fa-user",  -- FontAwesome icon
+        label = "Player",            -- Display name
+        -- Optional fields:
+        type = "client_event",      -- Event type (explained below)
+        action = "openPlayerMenu",  -- Event/command to execute
+        job = "police",             -- Only visible for this job (string)
+        job = {"mechanic", "tuner"} -- Only visible for these jobs (array)
+        submenu = { ... }           -- Submenu items
+    }
 }
 ```
 
-## 💵 Purchase
+---
 
-Available at [LuckyScripts Store](https://lucky-scripts.tebex.io/)
+## Event Types (type)
+
+### 1. client_event
+Triggers client-side events.
+
+```lua
+{ id = "stats", label = "Stats", type = "client_event", action = "openStats" }
+-- Triggers: RegisterNetEvent('openStats')
+```
+
+### 2. server_event
+Triggers server-side events.
+
+```lua
+{ id = "id", label = "Show ID", type = "server_event", action = "showId" }
+-- Triggers: TriggerServerEvent('showId')
+```
+
+### 3. command
+Executes FiveM chat commands.
+
+```lua
+{ id = "inv", label = "Inventory", type = "command", action = "inventory" }
+-- Executes: ExecuteCommand('inventory')
+```
+
+### 4. export
+Calls an export from another resource.
+
+```lua
+{ id = "ems", label = "EMS Menu", type = "export", action = "ems=openMenu" }
+-- Calls: exports['ems']['openMenu']()
+```
+
+---
+
+## Submenu
+
+To create a submenu under an item:
+
+```lua
+{
+    id = "vehicle",
+    icon = "fa-solid fa-car",
+    label = "Vehicle",
+    submenu = {
+        { id = "engine", icon = "fa-solid fa-key", label = "Engine", type = "command", action = "engine" },
+        { id = "doors", icon = "fa-solid fa-lock", label = "Doors", type = "client_event", action = "doors:all" },
+        { id = "trunk", icon = "fa-solid fa-box-open", label = "Trunk", type = "client_event", action = "trunk" },
+    }
+}
+```
+
+> ⚠️ **Note:** Submenus are single-level only. Nested submenus are not supported.
+
+---
+
+## Listening to Client Events
+
+### Using RegisterNetEvent
+
+```lua
+-- Door events example
+RegisterNetEvent('doors:all', function()
+    -- Open all doors
+end)
+
+RegisterNetEvent('doors:driver', function()
+    -- Open driver door
+end)
+```
+
+### Using NUI Callback
+
+```lua
+RegisterNUICallback('actionClick', function(data, cb)
+    -- data.id    = Item ID
+    -- data.type  = Event type
+    -- data.action = Action string
+    
+    if data.type == "client_event" then
+        TriggerEvent(data.action)
+    elseif data.type == "server_event" then
+        TriggerServerEvent(data.action)
+    elseif data.type == "command" then
+        ExecuteCommand(data.action)
+    elseif data.type == "export" then
+        local resource, exportName = string.match(data.action, "([^:]+):([^:]+)")
+        if resource and exportName then
+            exports[resource][exportName]()
+        end
+    end
+    
+    cb('ok')
+end)
+```
+
+---
+
+## Theme Color Customization
+
+`Config.ThemeColor` is defined as a HEX color code:
+
+```lua
+Config.ThemeColor = "22c55e"  -- Green (default)
+Config.ThemeColor = "3b82f6"  -- Blue
+Config.ThemeColor = "ef4444"  -- Red
+Config.ThemeColor = "f59e0b"  -- Yellow/Gold
+```
+
+The color is converted to RGB and applied to all UI elements:
+- Border glow effects
+- Icon colors
+- Hover animations
+- Active state colors
+
+---
+
+## Framework Integration (bridge/framework.lua)
+
+The system works with existing framework integration. Player job is retrieved via `Bridge.GetPlayerJob()`.
+
+Edit `bridge/framework.lua` for your own framework.
+
+---
+
+## Keyboard Controls
+
+| Key | Action |
+|-----|--------|
+| `F3` | Toggle menu |
+| `ESC` | Close menu |
+| Mouse Hover | Item selection |
+| Left Click | Trigger action |
+
+---
+
+## License
+
+MIT License
