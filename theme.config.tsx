@@ -2,7 +2,7 @@
 const config = {
   logo: (
     <div style={{ fontWeight: 'bold', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <span>🎲</span>
+      <span>🐔</span>
       <span>LuckyScripts</span>
     </div>
   ),
