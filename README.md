@@ -1,4 +1,4 @@
-# 🎲 LuckyScripts Documentation
+# 🐔 LuckyScripts Documentation
 
 Welcome to LuckyScripts official documentation. We provide high-quality FiveM resources for ESX and QB-Core frameworks.
 
