@@ -1,73 +1,176 @@
 ---
-title: Restaurant Management
+title: Restaurant/Business Management
 description: Full-Featured Restaurant/Business Management System
 ---
 
-# Restaurant Management
+# 🍽️ Lucky Restaurant/Business Management System
 
-> 💰 Full-Featured, Optimized & Dynamic Restaurant/Business Management System
+> **Full-Featured, Optimized & Dynamic Restaurant/Business Management System for FiveM**
 
-**lcky-restaurant_management** is a production-ready restaurant and business management framework built for FiveM. Features lazy-loading architecture, RAM-first caching, and framework-agnostic bridge system.
+A production-ready, Lua-based restaurant and business management framework built for FiveM servers. Designed with **lazy-loading architecture**, **RAM-first caching**, **framework-agnostic bridge system**, and complete **ox_lib** integration for a premium roleplay experience.
+
+---
+
+## 📋 Table of Contents
+
+- [Features](#-features)
+- [Architecture Overview](#-architecture-overview)
+- [Dependencies](#-dependencies)
+- [Installation](#-installation)
+- [Database Setup](#-database-setup)
+- [Configuration](#-configuration)
+- [Admin Setup Guide](#-admin-setup-guide)
+- [System Modules](#-system-modules)
+- [Exports Reference](#-exports-reference)
+- [Bridge System](#-bridge-system)
+- [Localization](#-localization)
+- [Permission System](#-permission-system)
+- [FAQ & Troubleshooting](#-faq--troubleshooting)
 
 ---
 
 ## ✨ Features
 
 ### Core Systems
-- 🏪 **Multi-Restaurant Support** - Unlimited restaurants with independent menus, recipes, orders
-- 📦 **Lazy Loading** - Restaurants load from SQL on first access (minimal memory)
-- ⚡ **RAM-First Caching** - All runtime data cached in memory with instant SQL sync
-- 🔒 **Job Grade Permissions** - Granular access based on framework job grades
+- 🏪 **Multi-Restaurant Support** — Unlimited restaurants, each with independent menus, recipes, orders, and settings
+- 📦 **Lazy Loading Architecture** — Restaurants load from SQL on first access, keeping memory usage minimal
+- ⚡ **RAM-First Caching** — All runtime data cached in memory with instant SQL sync on every mutation
+- 🔒 **Job Grade Permission System** — Granular access control based on `qbx_core` / `qb-core` / `ESX` job grades
 
 ### Business Operations
-- 📋 **Dynamic Menu Management** - Add, edit, remove menu items in real-time
-- 🧑‍🍳 **Kitchen Station System** - Cooking (Grill, Fryer, Oven, Coffee) and Assembly stations
-- 🍳 **Dynamic Recipe System** - Restaurant-specific recipes with custom ingredients
-- 🛒 **Cart & Order System** - Full ordering flow with FIFO queue and real-time kitchen updates
-- 💰 **Payment System** - Cash and bank card payments with confirmation
-- 🧾 **Receipt System** - Physical receipt items (ox_inventory) with single/bulk redemption
-- 💲 **Tip System** - Configurable tip percentages (0-20%)
-- 🏷️ **Discount System** - Time-limited hourly discounts
-- 📊 **Z Report System** - Revenue analytics and statistics
-- 🏪 **Wholesale Market** - Bulk ingredient purchasing via ox_inventory
+- 📋 **Dynamic Menu Management** — Add, edit, remove menu items with categories and pricing in real-time
+- 🧑‍🍳 **Kitchen Station System** — Cooking stations (Grill, Fryer, Oven, Coffee Machine) and Assembly stations (Prep Table, Drink Station)
+- 🍳 **Dynamic Recipe System** — Create restaurant-specific recipes with custom ingredients, linked to menu items
+- 🛒 **Cart & Order System** — Full customer ordering flow with FIFO queue, status tracking, and real-time kitchen updates
+- 💰 **Payment System** — Cash and bank card payments with customer confirmation flow
+- 🧾 **Receipt System** — Physical receipt items (ox_inventory) with metadata, single/bulk redemption at NPC
+- 💲 **Tip System** — Configurable tip percentages (0-20%) added during payment
+- 🏷️ **Discount System** — Time-limited hourly discounts targeting all products, categories, or specific items with overlap prevention
+- 📊 **Z Report System** — Revenue analytics: total income, tips, payment method breakdown, discount stats
+- 🏪 **Wholesale Market** — NPC-based bulk ingredient purchasing via `ox_inventory` shop system
+
+### Technical
+- 🌍 **Multi-Framework Bridge** — Supports QBX Core, QB-Core, and ESX out of the box
+- 🎯 **Multi-Target Bridge** — Supports ox_target and qb-target
+- 📦 **Multi-Inventory Bridge** — Supports ox_inventory and qb-inventory
+- 🌐 **Full Localization** — ox_lib locale system with EN and TR translations
+- 🗄️ **Repository Pattern** — Clean SQL abstraction layer with dedicated repository modules
+- 📍 **Dynamic Interaction Points** — In-game placement system for cashiers, order points, kitchens, storage, and trays
+- 🧹 **Automatic Cleanup** — Timed-out orders, expired discounts, and payment requests auto-cleanup
+
+---
+
+## 🏗️ Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────┐
+│                    CLIENT SIDE                       │
+├─────────────────────────────────────────────────────┤
+│  point_manager.lua      → ox_lib Points (proximity) │
+│  interaction_editor.lua → Placement mode UI          │
+│  menu_management.lua    → Menu browsing / editing    │
+│  cart_system.lua        → Customer cart & ordering   │
+│  cashier_system.lua     → Cashier operations         │
+│  kitchen_system.lua     → Kitchen station UI         │
+│  management_menu.lua    → Manager dashboard          │
+│  receipt_npc.lua        → Receipt redemption NPC     │
+│  stock_market.lua       → Wholesale NPC interaction  │
+│  admin_menu.lua         → Admin restaurant setup     │
+│  npc_manager.lua        → Common NPC spawn utility   │
+└─────────────┬───────────────────────────────────────┘
+              │  ox_lib callbacks / net events
+┌─────────────▼───────────────────────────────────────┐
+│                    SERVER SIDE                        │
+├─────────────────────────────────────────────────────┤
+│  instance_manager.lua   → Core: lazy load, RAM cache │
+│  settings_manager.lua   → Settings & interaction pts │
+│  menu_manager.lua       → Menu CRUD + validation     │
+│  order_manager.lua      → Order lifecycle & payments │
+│  recipe_manager.lua     → Dynamic recipe CRUD        │
+│  kitchen_manager.lua    → Kitchen task engine         │
+│  station_manager.lua    → Cooking & assembly logic    │
+│  receipt_manager.lua    → Receipt create/redeem       │
+│  discount_manager.lua   → Time-limited discounts     │
+│  z_report_manager.lua   → Revenue analytics          │
+│  stock_market.lua       → Wholesale shop register    │
+│  admin_manager.lua      → Admin CRUD operations      │
+├─────────────────────────────────────────────────────┤
+│              REPOSITORY LAYER (SQL)                  │
+│  base_repository.lua        → Query/Insert/Update    │
+│  restaurant_repository.lua  → Restaurant CRUD        │
+│  menu_repository.lua        → Menu items CRUD        │
+│  recipe_repository.lua      → Recipes + ingredients  │
+│  settings_repository.lua    → Settings & points I/O  │
+└─────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────┐
+│                   SHARED LAYER                       │
+├─────────────────────────────────────────────────────┤
+│  config.lua             → Main configuration         │
+│  config_stations.lua    → Station definitions         │
+│  bridge/init.lua        → Auto-detect framework      │
+│  bridge/core/qb.lua     → QBX / QB-Core bridge       │
+│  bridge/core/esx.lua    → ESX bridge                  │
+│  bridge/inventory/ox.lua→ ox_inventory bridge         │
+│  bridge/inventory/qb.lua→ qb-inventory bridge         │
+│  bridge/target/ox.lua   → ox_target bridge            │
+│  bridge/target/qb.lua   → qb-target bridge            │
+└─────────────────────────────────────────────────────┘
+```
+
+### Data Flow
+
+1. **Lazy Loading** — Restaurant data loads from MySQL on first `GetRestaurant(jobName)` call
+2. **RAM Cache** — All loaded data lives in `_G.SPC_RestaurantInstances` for zero-latency access
+3. **Instant Sync** — Every mutation (menu edit, order create, etc.) writes to SQL first, then updates RAM cache
+4. **Active Orders** — Stored **only in RAM** (never persisted). Completed/cancelled orders log to `lcky_orders_log`
+
+### Order Lifecycle
+
+```
+created → confirmed → preparing → ready → completed
+   ↓         ↓           ↓          ↓
+cancelled  cancelled  cancelled  cancelled
+```
 
 ---
 
 ## 📦 Dependencies
 
-| Dependency | Required |
-|------------|----------|
-| ox_lib | ✅ |
-| ox_inventory | ✅ |
-| oxmysql | ✅ |
-| ox_target or qb-target | ✅ |
-| qbx_core, qb-core, or ESX | ✅ |
+| Dependency | Version | Required |
+|---|---|---|
+| [FiveM Server](https://fivem.net/) | Build 5181+ | ✅ |
+| [ox_lib](https://github.com/overextended/ox_lib) | Latest | ✅ |
+| [ox_inventory](https://github.com/overextended/ox_inventory) | Latest | ✅ |
+| [oxmysql](https://github.com/overextended/oxmysql) | Latest | ✅ |
+| [ox_target](https://github.com/overextended/ox_target) **or** qb-target | Latest | ✅ |
+| [qbx_core](https://github.com/Qbox-project/qbx_core) **or** qb-core **or** ESX | Latest | ✅ |
 
 ---
 
 ## 🚀 Installation
 
-### Step 1 - Place the Resource
+### Step 1 — Place the Resource
 ```
 resources/
-└── [spc-scripts]/
+└── [LuckyScripts]/
     └── lcky-restaurant_management/
 ```
 
-### Step 2 - Import Database
-Execute `sql/schema.sql` - creates:
-- `lcky_restaurants` - Restaurant definitions
-- `lcky_menu_items` - Menu items
-- `lcky_recipes` - Dynamic recipes
-- `lcky_recipe_ingredients` - Recipe ingredients
-- `lcky_interaction_points` - Interaction points
-- `lcky_orders_log` - Order history
-- `lcky_discounts` - Discount records
+### Step 2 — Import the Database
+Execute `sql/schema.sql` in your MySQL database. This creates:
+- `lcky_restaurants` — Restaurant master table
+- `lcky_menu_items` — Menu items per restaurant
+- `lcky_recipes` — Dynamic recipes
+- `lcky_recipe_ingredients` — Recipe ingredient mapping
+- `lcky_interaction_points` — Stored interaction points
+- `lcky_orders_log` — Completed/cancelled order history
+- `lcky_discounts` — Time-limited discount records
 
-### Step 3 - Register Inventory Items
-Add items from `inventoryitems.lua` to your ox_inventory items config.
+### Step 3 — Register Inventory Items
+Add all required items to your `ox_inventory` items configuration. See the **[inventoryitems.lua](inventoryitems.lua)** file included in this repository for a complete list of ready-to-use item registration exports.
 
-### Step 4 - Add to server.cfg
+### Step 4 — Add the Resource to Your Server Config
 ```cfg
 ensure ox_lib
 ensure oxmysql
@@ -76,126 +179,416 @@ ensure ox_target
 ensure lcky-restaurant_management
 ```
 
-### Step 5 - Admin Permission
+### Step 5 — Add ACE Permission (Admin)
 ```cfg
 add_ace group.admin command.restaurantadmin allow
 ```
 
-### Step 6 - Create Restaurants
-Use `/restaurantadmin` in-game to register restaurants.
+### Step 6 — Create Restaurants In-Game
+Use the `/restaurantadmin` command to open the admin panel and register your restaurants.
 
 ---
 
-## 📁 Architecture
+## 🗄️ Database Setup
 
-```
-├── client/      # Point manager, interaction editor, menus, kitchen
-├── server/      # Instance, menu, order, recipe, kitchen managers
-│   └── repositories/  # SQL abstraction layer
-└── shared/
-    ├── config.lua     # Main configuration
-    ├── config_stations.lua  # Station definitions
-    └── bridge/        # Framework auto-detect
-        ├── core/      # qb.lua, esx.lua
-        ├── inventory/ # ox.lua, qb.lua
-        └── target/    # ox.lua, qb.lua
-```
+The `sql/schema.sql` file creates all necessary tables with proper indexing and foreign key relationships. All tables use `InnoDB` with `utf8mb4` character set.
 
-### Data Flow
-1. **Lazy Loading** - Restaurant data loads from MySQL on first access
-2. **RAM Cache** - Data lives in `_G.SPC_RestaurantInstances`
-3. **Instant Sync** - Every mutation writes to SQL first, then updates cache
+### Key Tables
+
+| Table | Purpose |
+|---|---|
+| `lcky_restaurants` | Restaurant definitions (job, name, center coords, radius, settings JSON, open/close times) |
+| `lcky_menu_items` | Per-restaurant menu items (label, price, category, base item, recipe link) |
+| `lcky_recipes` | Dynamic recipes (assembly station, output item, created by) |
+| `lcky_recipe_ingredients` | Recipe ingredients with amounts and sort order |
+| `lcky_interaction_points` | Interaction point coordinates and types |
+| `lcky_orders_log` | Completed/cancelled order log with payment details, tips, discounts |
+| `lcky_discounts` | Time-limited discounts with type, percentage, targets, start/end times |
 
 ---
 
 ## ⚙️ Configuration
 
-### Permission Grades
+### Main Config (`shared/config.lua`)
+
+#### Permission Grades
 ```lua
 Config.Permissions = {
-    accessCashier = 0,      -- All employees
-    accessStorage = 1,      -- Chef+
-    accessKitchen = 1,      -- Chef+
-    editMenu = 2,           -- Manager+
-    viewZReport = 2,        -- Manager+
-    manageDiscounts = 2,    -- Manager+
+    addInteractionPoint = 2,    -- Manager+
+    removeInteractionPoint = 2, -- Manager+
+    editMenu = 2,               -- Manager+
+    editSettings = 2,           -- Manager+
+    accessStorage = 1,          -- Chef+
+    accessKitchen = 1,          -- Chef+
+    accessCashier = 0,          -- All employees
+    redeemReceipts = 2,         -- Manager+
+    viewZReport = 2,            -- Manager+
+    manageDiscounts = 2,        -- Manager+
 }
 ```
 
-### Restaurant Definitions
+#### Restaurant Definitions
 ```lua
 Config.Restaurants = {
-    ["burgershot"] = { name = "Burger Shot" },
-    ["beanmachine"] = { name = "Bean Machine" },
+    ["burgershot"] = { name = "Burger Shot", description = "Fast food restaurant" },
+    ["beanmachine"] = { name = "Bean Machine", description = "Coffee shop" },
+    -- Add more restaurants here
+}
+
+Config.RestaurantJobs = { "burgershot", "beanmachine", ... }
+```
+
+#### Default Settings
+```lua
+Config.DefaultSettings = {
+    isOpen = false,           -- Starts closed on every restart
+    maxMenuItems = 15,
+    orderTimeout = 1800,      -- 30 minutes
+    maxActiveOrders = 20,
 }
 ```
 
-### Menu Categories
+#### Menu Categories
 ```lua
 Config.MenuCategories = {
     burger  = { label = "Burgers",  icon = "fas fa-burger" },
     drink   = { label = "Drinks",   icon = "fas fa-glass-water" },
+    dessert = { label = "Desserts", icon = "fas fa-ice-cream" },
+    pizza   = { label = "Pizzas",   icon = "fas fa-pizza-slice" },
 }
 ```
 
----
+#### Base Food Items
+Items selectable as the output item when creating menu entries:
+```lua
+Config.BaseFoodItems = {
+    "burger", "pizza", "coffee", "donut", "cake_slice",
+    "sandwich", "taco", "hotdog", "soda", "water", "juice", "icecream"
+}
+```
 
-## 🔧 Cooking Stations
+#### Receipt System
+```lua
+Config.ReceiptSystem = {
+    enabled = true,
+    itemName = 'receipt',
+    npc = { model = 's_m_m_linecook', coords = vec4(...), ... },
+    allowBulkRedeem = true,
+    maxBulkRedeem = 10,
+}
+```
 
+#### Tip, Discount, and Z Report Systems
+```lua
+Config.TipSystem = { enabled = true, maxPercentage = 20, step = 1 }
+Config.DiscountSystem = { enabled = true, maxPercentage = 50, maxDurationHours = 6 }
+Config.ZReport = { enabled = true, autoArchiveOnClose = false }
+```
+
+### Station Config (`shared/config_stations.lua`)
+
+#### Cooking Stations (Fixed input → output)
 | Station | Processes |
-|---------|-----------|
-| **Grill** | Raw Meat → Cooked Meat, Raw Bacon → Cooked Bacon |
-| **Fryer** | Potato → Fries, Onion → Onion Rings |
+|---|---|
+| **Grill** | Raw Meat → Cooked Meat, Raw Bacon → Cooked Bacon, Sausage → Cooked Sausage, Raw Steak → Cooked Steak |
+| **Fryer** | Potato → Fries, Onion → Onion Rings, Raw Chicken → Chicken Nuggets |
 | **Oven** | Dough → Baked Dough, Whole Chicken → Roasted Chicken |
-| **Coffee Machine** | Coffee Beans → Espresso Shot |
+| **Coffee Machine** | Coffee Beans → Espresso Shot, Milk → Steamed Milk |
 
-### Assembly Stations
-Dynamic recipe-based stations (Prep Table, Drink Station)
+#### Assembly Stations (Dynamic recipe-based)
+| Station | Default Recipes |
+|---|---|
+| **Prep Table** | Simple Burger, Simple Sandwich, Simple Salad |
+| **Drink Station** | Soda, Fruit Juice |
 
----
-
-## 🎮 In-Game Commands
-
-| Command | Description |
-|---------|-------------|
-| `/restaurantadmin` | Open admin panel |
-| (In-game menus) | Management, Cashier, Kitchen interfaces |
+#### Assembly Ingredients
+The pool of ingredients available when creating custom recipes via the menu editor.
 
 ---
 
-## 📤 Key Exports
+## 🛠️ Admin Setup Guide
+
+### 1. Grant Admin Permission
+```cfg
+add_ace identifier.fivem:XXXXXX command.restaurantadmin allow
+```
+
+### 2. Create a Restaurant
+1. Run `/restaurantadmin` in-game
+2. Select **"Add New Restaurant"**
+3. Enter the **Core Job Name** (must exist in your framework, e.g., `burgershot`)
+4. Enter a **Display Name** (e.g., `Burger Shot`)
+5. Set a **Radius** for the proximity area (10-100)
+6. You'll be placed at the restaurant center — this is saved automatically
+
+### 3. Add Interaction Points
+1. As a Manager+ employee, open the **Management Menu** at the management point
+2. Go to **Interaction Points → Add Point**
+3. Select a type (Cashier, Order, Storage, Tray, Kitchen Station, Kitchen Pass, Management)
+4. Enter placement mode — walk to desired location, press **E** to confirm or **X** to cancel
+
+### 4. Set Up the Menu
+1. Open the Management Menu → **Edit Menu** → **Add Item**
+2. Fill in: Name, Description, Price, Category, Base Item
+3. Optionally create a **Custom Recipe** by selecting an assembly station and ingredients
+4. The item appears on the customer order menu immediately
+
+### 5. Open for Business
+1. Management Menu → **Restaurant Settings** → **Open Orders**
+2. Customers can now order from Order Points
+
+---
+
+## 📚 System Modules
+
+### Instance Manager (Server)
+Central module managing restaurant lazy-loading, RAM caching, and data access.
+
+### Menu Manager (Server)
+Full CRUD for menu items with validation, slug generation, and instant SQL+RAM sync.
+
+### Order Manager (Server)
+Order lifecycle management. Orders live **only in RAM** — completed/cancelled orders log to SQL.
+
+### Recipe Manager (Server)
+Dynamic recipe CRUD per restaurant. Recipes link to menu items and define assembly station, ingredients, and output.
+
+### Kitchen Manager (Server)
+Kitchen task engine generating pending preparation tasks from active orders.
+
+### Station Manager (Server)
+Handles cooking (fixed input→output) and assembly (recipe-based) station operations with inventory integration.
+
+### Settings Manager (Server)
+Manages interaction points, restaurant open/close status, and general settings.
+
+### Receipt Manager (Server)
+Creates `receipt` items with metadata and handles single/bulk redemption with money payout.
+
+### Discount Manager (Server)
+Time-limited discount management with overlap prevention and automatic expiry.
+
+### Z Report Manager (Server)
+Revenue analytics computing totals, tips, payment breakdown, and discount statistics from order logs.
+
+### Stock Market (Server)
+Registers a wholesale shop in `ox_inventory` restricted to restaurant job grades.
+
+### Admin Manager (Server)
+Admin-only restaurant creation, deletion, and location management protected by ACE permissions.
+
+---
+
+## 📤 Exports Reference
 
 ### Instance Manager
 ```lua
-exports['lcky-restaurant_management']:GetRestaurant(jobName)
-exports['lcky-restaurant_management']:HasPlayerPermission(source, perm)
-exports['lcky-restaurant_management']:PreloadAllRestaurants()
-```
-
-### Order Manager
-```lua
-exports['lcky-restaurant_management']:CreateOrder(source, jobName, items)
-exports['lcky-restaurant_management']:UpdateOrderStatus(jobName, orderId, status)
+-- Server-side exports
+exports['spc-restaurant_management']:GetRestaurant(jobName)              -- Get restaurant instance (lazy loads)
+exports['spc-restaurant_management']:GetRestaurantId(jobName)            -- Get SQL ID
+exports['spc-restaurant_management']:GetPlayerRestaurant(source)         -- Get player's restaurant
+exports['spc-restaurant_management']:GetPlayerJobGrade(source)           -- Get player's job grade
+exports['spc-restaurant_management']:HasPlayerPermission(source, perm)   -- Check permission
+exports['spc-restaurant_management']:GetAllRestaurants()                 -- Get all loaded instances
+exports['spc-restaurant_management']:GetRestaurantCount()                -- Count loaded restaurants
+exports['spc-restaurant_management']:CreateRestaurantInstance(data)      -- Create new instance
+exports['spc-restaurant_management']:InvalidateCache(jobName)            -- Clear specific cache
+exports['spc-restaurant_management']:InvalidateAllCache()                -- Clear all cache
+exports['spc-restaurant_management']:PreloadAllRestaurants()             -- Warm-up all restaurants
 ```
 
 ### Menu Manager
 ```lua
-exports['lcky-restaurant_management']:AddMenuItem(jobName, data)
-exports['lcky-restaurant_management']:GetRestaurantMenu(jobName)
+exports['spc-restaurant_management']:AddMenuItem(jobName, data)
+exports['spc-restaurant_management']:RemoveMenuItem(jobName, menuId)
+exports['spc-restaurant_management']:UpdateMenuItem(jobName, menuId, data)
+exports['spc-restaurant_management']:GetRestaurantMenu(jobName)
+exports['spc-restaurant_management']:GetMenuItem(jobName, menuId)
+```
+
+### Order Manager
+```lua
+exports['spc-restaurant_management']:CreateOrder(source, jobName, items)
+exports['spc-restaurant_management']:GetOrder(jobName, orderId)
+exports['spc-restaurant_management']:GetRestaurantOrders(jobName, statusFilter?)
+exports['spc-restaurant_management']:GetOrderQueue(jobName)
+exports['spc-restaurant_management']:UpdateOrderStatus(jobName, orderId, status)
+exports['spc-restaurant_management']:CancelOrder(jobName, orderId, reason?)
+exports['spc-restaurant_management']:GetOrderHistory(jobName, limit?, offset?)
+```
+
+### Recipe Manager
+```lua
+exports['spc-restaurant_management']:CreateRecipe(jobName, recipeData)
+exports['spc-restaurant_management']:DeleteRecipe(jobName, recipeId)
+exports['spc-restaurant_management']:GetRecipe(jobName, recipeId)
+exports['spc-restaurant_management']:GetRestaurantRecipes(jobName)
+exports['spc-restaurant_management']:GetRecipeByMenuId(jobName, menuId)
+exports['spc-restaurant_management']:CanCraft(source, jobName, recipeId, isDefault, stationType)
+exports['spc-restaurant_management']:ConsumeIngredients(source, recipe)
+exports['spc-restaurant_management']:GetStationRecipes(jobName, stationType)
+exports['spc-restaurant_management']:GetRecipeCookTime(recipe)
+```
+
+### Kitchen Manager
+```lua
+exports['spc-restaurant_management']:GetPendingKitchenTasks(jobName)
+exports['spc-restaurant_management']:GetStationPendingTasks(jobName, stationType)
+exports['spc-restaurant_management']:GetItemStationType(jobName, itemName)
+exports['spc-restaurant_management']:GetOrderProgress(jobName, orderId)
+exports['spc-restaurant_management']:GetKitchenOverview(jobName)
+```
+
+### Station Manager
+```lua
+exports['spc-restaurant_management']:GetCookingStationProcesses(stationType)
+exports['spc-restaurant_management']:ProcessItem(source, stationType, processId)
+exports['spc-restaurant_management']:AssembleRecipe(source, jobName, recipeId, isDefault, stationType, orderId?)
+exports['spc-restaurant_management']:CanProcessItem(source, stationType, processId)
+exports['spc-restaurant_management']:CanAssembleRecipe(source, recipe)
+```
+
+### Settings Manager
+```lua
+exports['spc-restaurant_management']:AddInteractionPoint(jobName, type, coords, stationType?)
+exports['spc-restaurant_management']:RemoveInteractionPoint(jobName, pointId)
+exports['spc-restaurant_management']:GetInteractionPoints(jobName)
+exports['spc-restaurant_management']:GetSettings(jobName)
+exports['spc-restaurant_management']:UpdateSettings(jobName, settings)
+exports['spc-restaurant_management']:UpdateSetting(jobName, key, value)
+exports['spc-restaurant_management']:SetRestaurantOpen(jobName, isOpen)
+exports['spc-restaurant_management']:IsRestaurantOpen(jobName)
+```
+
+### Receipt Manager
+```lua
+exports['spc-restaurant_management']:CreateReceipt(cashierSource, metadata)
+exports['spc-restaurant_management']:RedeemReceipt(source, slot, payoutMethod)
+exports['spc-restaurant_management']:RedeemAllReceipts(source, payoutMethod)
+exports['spc-restaurant_management']:GetReceipts(source)
+exports['spc-restaurant_management']:GetTotalReceiptValue(source)
+```
+
+### Discount Manager
+```lua
+exports['spc-restaurant_management']:CreateDiscount(jobName, type, percentage, targets, hours, createdBy?)
+exports['spc-restaurant_management']:GetActiveDiscounts(jobName)
+exports['spc-restaurant_management']:GetAllDiscounts(jobName)
+exports['spc-restaurant_management']:StopDiscount(jobName, discountId)
+exports['spc-restaurant_management']:CheckDiscount(jobName, menuId, category)
+exports['spc-restaurant_management']:ApplyDiscount(jobName, menuId, originalPrice, category)
+exports['spc-restaurant_management']:CleanupExpiredDiscounts()
+```
+
+### Z Report Manager
+```lua
+exports['spc-restaurant_management']:GetOpenPeriodReport(jobName)
+exports['spc-restaurant_management']:GetDailyReport(jobName)
+exports['spc-restaurant_management']:GetDateRangeReport(jobName, startDate, endDate)
+exports['spc-restaurant_management']:CalculateReport(restaurantId, startTime, endTime)
 ```
 
 ---
 
-## 🛠️ Admin Setup
+## 🌉 Bridge System
 
-1. Grant ACE permission: `add_ace group.admin command.restaurantadmin allow`
-2. Run `/restaurantadmin` in-game
-3. Add restaurants and interaction points
-4. Set up menus and recipes
-5. Open for business via Management Menu
+The bridge auto-detects your framework at runtime and provides a unified API:
+
+```
+shared/bridge/
+├── init.lua          → Detects qbx_core / qb-core / es_extended, ox_inventory / qb-inventory, ox_target / qb-target
+├── core/
+│   ├── qb.lua        → QBX & QB-Core server+client adapter
+│   └── esx.lua       → ESX server+client adapter
+├── inventory/
+│   ├── ox.lua        → ox_inventory adapter
+│   └── qb.lua        → qb-inventory / ps-inventory adapter
+└── target/
+    ├── ox.lua        → ox_target adapter
+    └── qb.lua        → qb-target adapter
+```
+
+### Bridge API
+
+| Function | Side | Purpose |
+|---|---|---|
+| `Bridge.GetPlayer(source)` | Server | Get normalized player object with `PlayerData`, `Functions.AddMoney/RemoveMoney/GetMoney` |
+| `Bridge.GetPlayerData()` | Client | Get local player data (citizenid, charinfo, job) |
+| `Bridge.DoesJobExist(jobName)` | Server | Check if a job exists in the framework |
+| `Bridge.OpenBossMenu(jobName)` | Client | Open the management/boss menu |
+| `Bridge.Inventory.AddItem(...)` | Server | Add item to player inventory |
+| `Bridge.Inventory.RemoveItem(...)` | Server | Remove item from player inventory |
+| `Bridge.Inventory.GetItemCount(...)` | Both | Get item count |
+| `Bridge.Inventory.RegisterStash(...)` | Server | Register a stash (tray/storage/kitchen pass) |
+| `Bridge.Inventory.OpenStash(stashId)` | Client | Open a stash UI |
+| `Bridge.Target.AddBoxZone(data)` | Client | Add a target box zone |
+| `Bridge.Target.AddLocalEntity(entity, options)` | Client | Add target to entity |
+| `Bridge.Target.RemoveZone(zoneId)` | Client | Remove target zone |
 
 ---
 
-## 📝 License
+## 🌐 Localization
 
-Developed by **LuckyScripts** | All rights reserved
+The system uses `ox_lib` locale with JSON translation files:
+
+```
+locales/
+├── en.json    → English (default)
+└── tr.json    → Turkish
+```
+
+Set the locale in your `ox_lib` configuration or `server.cfg`:
+```cfg
+setr ox:locale en
+```
+
+All UI strings, notifications, and menu labels reference locale keys via `locale('key_name', ...)`.
+
+---
+
+## 🔐 Permission System
+
+Permissions are grade-based. The `Config.Permissions` table maps actions to minimum required job grade levels.
+
+| Grade | Example Role | Accessible Features |
+|---|---|---|
+| 0 | Employee | Cashier, Order Point |
+| 1 | Chef | Kitchen, Storage, all above |
+| 2+ | Manager | Menu editing, Settings, Discounts, Z Report, Receipts, Interaction points, all above |
+
+Admin operations (creating/deleting restaurants) require the `command.restaurantadmin` ACE permission.
+
+---
+
+## ❓ FAQ & Troubleshooting
+
+**Q: Restaurants don't appear after server restart?**
+A: Restaurants are **lazy-loaded**. They load on first player interaction. Use `PreloadAllRestaurants()` export if you want warm-up at startup.
+
+**Q: Orders disappear after restart?**
+A: By design. Active orders live only in RAM. Completed/cancelled orders are logged to `lcky_orders_log`.
+
+**Q: Restaurant is always closed after restart?**
+A: Intentional. `ResetAllRestaurantsOpenStatus()` runs on resource start. A manager must open the restaurant each session.
+
+**Q: How do I add a new restaurant?**
+A: 1) Add the job to your framework. 2) Add it to `Config.Restaurants` and `Config.RestaurantJobs`. 3) Use `/restaurantadmin` in-game to register it with coordinates.
+
+**Q: How do I add new cooking station processes?**
+A: Edit `shared/config_stations.lua` → Add entries to `Config.CookingStations[stationType].processes`.
+
+**Q: How do I add new assembly ingredients?**
+A: Add entries to `Config.AssemblyIngredients` in `config_stations.lua`.
+
+**Q: How do I add a new menu category?**
+A: Add an entry to `Config.MenuCategories` in `config.lua`.
+
+---
+
+## 📄 License
+
+This resource is developed by **LuckyScripts**. All rights reserved.
+
+---
+
+> **Version:** 1.0.0 | **Author:** LuckyScripts | **Game:** GTA V (FiveM)
