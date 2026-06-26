@@ -1,3 +1,8 @@
+---
+title: Pulsar Dispatch
+description: Advanced FiveM Dispatch & Alert Experience
+---
+
 # 🚔 Pulsar Dispatch
 
 **Advanced FiveM Dispatch & Alert Experience** — a complete in-game dispatch panel with live map, automated alert detection, and real-time unit tracking.
