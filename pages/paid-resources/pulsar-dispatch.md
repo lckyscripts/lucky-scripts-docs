@@ -1,11 +1,6 @@
 # 🚔 Pulsar Dispatch
 
-**Advanced FiveM Dispatch & Alert System** — a complete in-game dispatch panel with live map, automated alert detection, and real-time unit tracking.
-
-[![Framework](https://img.shields.io/badge/Framework-QBCore%20|%20QBX%20|%20ESX-blue)]()
-[![Language](https://img.shields.io/badge/Language-Lua%20%7C%20TypeScript-orange)]()
-[![UI](https://img.shields.io/badge/UI-React%2019%20%7C%20Leaflet-green)]()
-[![License](https://img.shields.io/badge/License-Proprietary-red)]()
+**Advanced FiveM Dispatch & Alert Experience** — a complete in-game dispatch panel with live map, automated alert detection, and real-time unit tracking.
 
 ---
 
